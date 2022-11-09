@@ -1,5 +1,3 @@
-/HashSet.class
-/Main.class
-/Test.class
-/Test.java
+*.class
+Test.java
 /__MACOSX
