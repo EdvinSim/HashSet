@@ -13,7 +13,7 @@ class HashSet {
     public boolean contains(int x) {
         int i = x;
         boolean exists = false;
-
+        
         if(arr[i] != null && arr[i] == x) exists = true;
         else i++;
 
@@ -98,7 +98,8 @@ class HashSet {
         return size;
     }
 
-    public void fillHole() {
+    //Fill hole on index i.
+    public void fillHole(int i) {
         
     }
 }
