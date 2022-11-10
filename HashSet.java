@@ -29,7 +29,7 @@ class HashSet {
     }
 
     public void insert(int x) {
-        //capacity();
+        capacity();
 
         int length = arr.length;
         int i = x % length;
@@ -42,11 +42,10 @@ class HashSet {
             else {
                 i = (i+1) % length;
             }
-        
+        }
 
         size++;
         arr[i] = x;
-        }
     }
 
     
@@ -104,7 +103,9 @@ class HashSet {
     }
 
     private void capacity() {
-        if((size/arr.length) >= LoadFactorThreshold) rehash();
+        if((size/arr.length) >= LoadFactorThreshold) {
+            rehash();
+        }
     }
 
     private boolean _capacity() {
@@ -122,9 +123,12 @@ class HashSet {
     private void rehash() {
         Integer[] old = arr;
         arr = new Integer[old.length * 2];
+        size = 0;//Because insert counts size.
 
         for(int i=0; i < old.length; i++) {
-            arr[i] = old[i];
+            if(old[i] != null) {
+                insert(old[i]);
+            }
         }
     }
 }
