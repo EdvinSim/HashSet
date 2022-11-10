@@ -4,10 +4,11 @@ class HashSet {
     //Integer class so that we can compare to null.
     Integer arr[];
     int size;
+    final double LoadFactorThreshold = 0.75;
 
     public HashSet() {
         //TODO fikse load factor.
-        arr = new Integer[500];
+        arr = new Integer[100];
         size = 0;
     }
 
@@ -19,46 +20,44 @@ class HashSet {
             if(x == arr[i]) {
                 return true;
             }
-
-            i = (i+1) % arr.length;
+            else {
+                i = (i+1) % arr.length;
+            }
         }
 
         return false;
     }
 
     public void insert(int x) {
-        //x = k and v.
-        if(capacity()) {
-            int length = arr.length;
-            int i = (x % length);
+        //capacity();
 
-            while(arr[i] != null) {
-                if(x == arr[i]) {
-                    arr[i] = x;
-                    return;
-                }
-                else {
-                    i = ((i +1) % length);
-                }
+        int length = arr.length;
+        int i = x % length;
+
+        while(arr[i] != null) {
+            if(x == arr[i]) { //Then x already exists.
+                arr[i] = x;
+                return;
             }
+            else {
+                i = (i+1) % length;
+            }
+        
 
-            size++;
-            arr[i] = x;
+        size++;
+        arr[i] = x;
         }
     }
 
     
-    //TODO tett hull!!!!
     public void remove(int x) {
         int i = x % arr.length;
 
         while(arr[i] != null) {
-            int value = arr[i];//TODO unodvendig linje?
-
-            if(x == value) {
+            if(x == arr[i]) {
                 size--;
                 arr[i] = null;
-                //TODO fillHole()
+                fillHole(i);
                 return;
             }
             else {
@@ -84,12 +83,31 @@ class HashSet {
 
     //Fill hole on index i.
     public void fillHole(int i) {
-        for(int s = 1; arr[(int)(i+s % arr.length)] != null; s++) {
-            
+        int len = arr.length;
+        int s = 1;
+        int pointer = (i+s) % len;
+
+        while(arr[pointer] != null) {
+            int value = arr[pointer];
+            int j = value % len;
+
+            if(!(0 < ((j-i) % len) && ((j-i) % len) <= s)) {
+                arr[i] = value;
+                arr[pointer] = null;
+                fillHole(pointer);
+                return;
+            }
+
+            s += 1;
+            pointer = (i+s) % len;
         }
     }
 
-    private boolean capacity() {
+    private void capacity() {
+        if((size/arr.length) >= LoadFactorThreshold) rehash();
+    }
+
+    private boolean _capacity() {
         if(size >= arr.length) {
             System.out.println("Array capacity is full!");
             return false;
@@ -97,6 +115,16 @@ class HashSet {
         
         else {
             return true;
+        }
+    }
+
+    //Extends array size to double.
+    private void rehash() {
+        Integer[] old = arr;
+        arr = new Integer[old.length * 2];
+
+        for(int i=0; i < old.length; i++) {
+            arr[i] = old[i];
         }
     }
 }
