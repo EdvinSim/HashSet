@@ -6,79 +6,63 @@ class HashSet {
     int size;
 
     public HashSet() {
-        arr = new Integer[1000000];
+        //TODO fikse load factor.
+        arr = new Integer[500];
         size = 0;
     }
 
     public boolean contains(int x) {
-        int i = x;
-        boolean exists = false;
-        
-        if(arr[i] != null && arr[i] == x) exists = true;
-        else i++;
+        int i = x % arr.length;
 
-        //Search for x from next index.
-        for(i = x+1; !exists; i++) {
-            if(i == arr.length) i = 0; //If we reach end of array we search from start.
+        while(arr[i] != null) {
 
-            if(arr[i] == null || i == x) return exists; //If i = x we hav made a full circle.
-            else if(arr[i] == x) exists = true;
+            if(x == arr[i]) {
+                return true;
+            }
+
+            i = (i+1) % arr.length;
         }
 
-        return exists;
+        return false;
     }
 
-    //Insert using Linear probing
     public void insert(int x) {
-        int i = x;
-        boolean inserted = false;
+        //x = k and v.
+        if(capacity()) {
+            int length = arr.length;
+            int i = (x % length);
 
-        if(arr[i] == null) {
-            arr[i] = x;
-            inserted = true;
+            while(arr[i] != null) {
+                if(x == arr[i]) {
+                    arr[i] = x;
+                    return;
+                }
+                else {
+                    i = ((i +1) % length);
+                }
+            }
+
             size++;
-        }
-        else if(arr[i] == x) {
-            inserted = true;
-        }
-
-        //Search for a free space from next index.
-        for(i = x+1; !inserted; i++) {
-            if(i == arr.length) i = 0; //If we reach end of array we look for a free space from start.
-            else if(i == x) {
-                System.out.println("Array is full!");
-                return;
-            }
-            
-            if(arr[i] == null) {
-                arr[i] = x;
-                inserted = true;
-                size++;
-            }
-            else if(arr[i] == x) {
-                inserted = true;
-            }
+            arr[i] = x;
         }
     }
+
     
     //TODO tett hull!!!!
     public void remove(int x) {
-        int i = x;
-        boolean removed = false;
+        int i = x % arr.length;
 
-        if(arr[i] != null && arr[i] == x) {
-            arr[i] = null;
-            size--;
-        }
+        while(arr[i] != null) {
+            int value = arr[i];//TODO unodvendig linje?
 
-        for(i = x+1; !removed; i++) {
-            if(i == arr.length) i = 0; //If we reach end of array we look for x from start.
-            else if(i == x && !removed) return; //Then x is not in arr.
-            
-            if(arr[i] != null && arr[i] == x) {
-                arr[i] = null;
-                removed = true;
+            if(x == value) {
                 size--;
+                arr[i] = null;
+                //TODO fillHole()
+                return;
+            }
+            else {
+                i = (i+1) % arr.length;
             }
         }
     }
@@ -100,6 +84,19 @@ class HashSet {
 
     //Fill hole on index i.
     public void fillHole(int i) {
+        for(int s = 1; arr[(int)(i+s % arr.length)] != null; s++) {
+            
+        }
+    }
+
+    private boolean capacity() {
+        if(size >= arr.length) {
+            System.out.println("Array capacity is full!");
+            return false;
+        }
         
+        else {
+            return true;
+        }
     }
 }
