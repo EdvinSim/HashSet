@@ -28,6 +28,8 @@ public class Main {
             }
         }
 
+        //Test.checkDuplicates(hs.getArray());
+
         sc.close();
 
     }

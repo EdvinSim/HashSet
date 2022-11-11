@@ -1,32 +1,45 @@
+
+//A set implementet with Linear Probing. It can only contain integers.
+
 class HashSet {
 
 
     //Integer class so that we can compare to null.
     Integer arr[];
+
+    //Number of elements not null in arr.
     int size;
+
     final double LoadFactorThreshold = 0.75;
 
     public HashSet() {
-        //TODO fikse load factor.
         arr = new Integer[100];
         size = 0;
     }
 
+
     public boolean contains(int x) {
+        return get(x) != null;
+    }
+
+
+    //Returns x from array. Returns null if x not in array.
+    public Integer get(int x) {
         int i = x % arr.length;
 
         while(arr[i] != null) {
 
             if(x == arr[i]) {
-                return true;
+                return arr[i];
             }
             else {
-                i = (i+1) % arr.length;
+                i = ++i % arr.length;
             }
         }
 
-        return false;
+        return null;
     }
+
 
     public void insert(int x) {
         capacity();
@@ -40,7 +53,7 @@ class HashSet {
                 return;
             }
             else {
-                i = (i+1) % length;
+                i = ++i % length;
             }
         }
 
@@ -60,14 +73,16 @@ class HashSet {
                 return;
             }
             else {
-                i = (i+1) % arr.length;
+                i = ++i % arr.length;
             }
         }
     }
 
+    //Returns the number of elements in arr.
     public int size() {
         return size;
     }
+
 
     //For testing if this.size is true size.
     public int countSize() {
@@ -79,6 +94,7 @@ class HashSet {
 
         return size;
     }
+
 
     //Fill hole on index i.
     public void fillHole(int i) {
@@ -102,33 +118,31 @@ class HashSet {
         }
     }
 
+
     private void capacity() {
-        if((size/arr.length) >= LoadFactorThreshold) {
+        double loadfactor = (double)size/arr.length;
+        
+        if(loadfactor >= LoadFactorThreshold) {
             rehash();
         }
     }
 
-    private boolean _capacity() {
-        if(size >= arr.length) {
-            System.out.println("Array capacity is full!");
-            return false;
-        }
-        
-        else {
-            return true;
-        }
-    }
 
-    //Extends array size to double.
+    //Doubles array size.
     private void rehash() {
         Integer[] old = arr;
         arr = new Integer[old.length * 2];
-        size = 0;//Because insert counts size.
+        size = 0; //Because insert counts size.
 
         for(int i=0; i < old.length; i++) {
             if(old[i] != null) {
                 insert(old[i]);
             }
         }
+    }
+
+
+    public Integer[] getArray() {
+        return arr;
     }
 }
